@@ -20,8 +20,8 @@ export const GlobalProvider = ({ children  }) => {
     // Actions
     async function getTransactions() {
        try {
-           const res = await fetch('./api/v1/transactions');
-           console.log(res.data.data);
+           const res = await fetch('/api/v1/transactions');
+        //    console.log(res.data.data);
            dispatch({
                 type: 'GET_TRANSACTION',
                 payload: res.data.data
@@ -29,7 +29,8 @@ export const GlobalProvider = ({ children  }) => {
        } catch (err) {
             dispatch({
                 type: 'TRANSACTION_ERROR',
-                payload: err.response.data.error
+                // payload: err.res.data.error,
+                payload: 'data not found'
             });
        }
     }
