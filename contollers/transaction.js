@@ -52,5 +52,23 @@ exports.addTransactions = async (req, res, next) => {
 // @route   DELETE /api/v1/transactions/:id
 // @access  Public
 exports.deleteTransactions = async (req, res, next) => {
-    res.send('DELETE transactions')
+    try {
+        const transaction = await Transaction.findById(req.params.id);
+        if(!transaction) {
+            res.status(404).json({
+                success: false,
+                error: 'Transaction does not exist'
+            })
+        } 
+        await transaction.remove();
+        return res.status(200).json({
+            success: true,
+            data: []
+        })
+    } catch (error) {
+        return res.send(500).json({
+            success: false,
+            error: 'Server Error'
+        })
+    }
 }
