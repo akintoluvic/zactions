@@ -1,6 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import AppReducer from './AppReducer';
-// import axios from 'axios';
+import axios from 'axios';
 
 // Initial State
 const initialState = {
@@ -20,8 +20,7 @@ export const GlobalProvider = ({ children  }) => {
     // Actions
     async function getTransactions() {
        try {
-           const res = await fetch('/api/v1/transactions');
-        //    console.log(res.data.data);
+           const res = await axios.get('/api/v1/transactions');
            dispatch({
                 type: 'GET_TRANSACTION',
                 payload: res.data.data
@@ -29,17 +28,25 @@ export const GlobalProvider = ({ children  }) => {
        } catch (err) {
             dispatch({
                 type: 'TRANSACTION_ERROR',
-                // payload: err.res.data.error,
-                payload: 'data not found'
+                payload: err.res.data.error,
             });
        }
     }
 
-    function deleteTransaction(id) {
-        dispatch({
-            type: 'DELETE_TRANSACTION',
-            payload: id
-        });
+    async function deleteTransaction(id) {
+        try {
+            await axios.delete(`/api/v1/transactions/${id}`);
+            dispatch({
+                type: 'DELETE_TRANSACTION',
+                payload: id
+            });
+        } catch (err) {
+            dispatch({
+                type: 'TRANSACTION_ERROR',
+                payload: err.res.data.error,
+            });
+        }
+        
     }
     function addTransaction(transaction) {
         dispatch({
